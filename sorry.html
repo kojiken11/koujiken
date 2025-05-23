@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sebuah Pesan Khusus Untuk Ca</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #eaf2f8; /* Biru langit sangat pucat */
+            --bg-gradient-end: #f4eef6; /* Lavender sangat pucat */
+            --envelope-color: #fffde7; /* Krem sangat muda */
+            --letter-color: #ffffff;
+            --text-color-letter: #5D4037; /* Coklat tua untuk teks surat */
+            --heart-outline-color: #f8bbd0; /* Pink lembut */
+            --footer-text-color: #78909c; /* Abu-abu kebiruan */
+            
+            /* Warna Hiasan */
+            --flower-petal-pink: #fce4ec;
+            --flower-petal-lavender: #ede7f6;
+            --flower-center-yellow: #fff59d;
+            --moon-color: #e0e0e0; /* Silver muda */
+            --star-gold: #ffd54f;
+            --star-silver: #f5f5f5;
+            --tag-bg: #eeeeee;
+            --tag-text: #607d8b;
+            --airplane-color: #b3e5fc;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .scene {
+            position: relative;
+            width: 450px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-wrapper {
+            position: relative;
+            width: 380px;
+            height: 320px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 70px;
+            opacity: 0;
+            animation: fadeInScene 0.5s 0.2s forwards;
+        }
+        
+        @keyframes fadeInScene {
+            to { opacity: 1; }
+        }
+
+        .big-heart-outline {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .big-heart-outline::before,
+        .big-heart-outline::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: calc(50% - 90px);
+            width: 180px;
+            height: 280px;
+            border: 5px solid var(--heart-outline-color); /* Lebih tipis */
+            border-radius: 90px 90px 0 0;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(248, 187, 208, 0.3); /* Glow lembut */
+        }
+
+        .big-heart-outline::after {
+            left: calc(50% - 90px + 0.5px); /* Penyesuaian kecil */
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .envelope-container {
+            position: relative;
+            width: 310px; /* Sedikit lebih kecil */
+            height: 200px;
+            perspective: 1200px;
+            z-index: 1;
+        }
+
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: var(--envelope-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-color: var(--envelope-color);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 3;
+        }
+        
+        .envelope-flap::before {
+            content: '';
+            position: absolute;
+            top: calc(100% - 1px);
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 155px solid transparent;
+            border-right: 155px solid transparent;
+            border-top: 85px solid var(--envelope-color);
+            filter: brightness(0.97); /* Sedikit lebih gelap */
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .letter {
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translate(-50%, 10px) scale(0.95);
+            width: 90%;
+            max-height: 380px;
+            overflow-y: auto;
+            background-color: var(--letter-color);
+            padding: 18px; /* Sedikit kurangi padding */
+            box-sizing: border-box;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            font-family: 'Kalam', cursive; /* Font tulisan tangan */
+            font-size: 19px; /* Ukuran font surat */
+            line-height: 1.6; /* Spasi baris */
+            color: var(--text-color-letter);
+            opacity: 0;
+            transition: transform 0.7s 0.5s ease-out, opacity 0.7s 0.5s ease-out;
+            z-index: 2;
+            white-space: pre-wrap;
+        }
+        .letter::-webkit-scrollbar { width: 6px; }
+        .letter::-webkit-scrollbar-track { background: #f9f9f9; border-radius: 10px; }
+        .letter::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+        .letter::-webkit-scrollbar-thumb:hover { background: #cccccc; }
+
+        .envelope.open .letter {
+            transform: translate(-50%, -75%) scale(1); /* Surat naik lebih tinggi */
+            opacity: 1;
+        }
+
+        .footer-text {
+            font-size: 18px;
+            color: var(--footer-text-color);
+            text-align: center;
+            opacity: 0;
+            animation: fadeInText 1s 2.5s forwards;
+            font-family: 'Dancing Script', cursive; /* Font script elegan */
+            margin-top: -25px; /* Lebih dekat */
+        }
+
+        @keyframes fadeInText {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dekorasi Baru */
+        .decoration {
+            position: absolute;
+            opacity: 0;
+            animation: popInSoft 0.7s forwards;
+            transform-origin: center center;
+            pointer-events: none; /* Agar tidak menghalangi klik amplop jika ada */
+        }
+
+        @keyframes popInSoft {
+            0% { opacity: 0; transform: scale(0.4) rotate(var(--initial-rotate, 0deg)); }
+            70% { opacity: 1; transform: scale(1.1) rotate(var(--final-rotate, 0deg)); }
+            100% { opacity: 1; transform: scale(1) rotate(var(--final-rotate, 0deg)); }
+        }
+
+        .flower {
+            width: 35px;
+            height: 35px;
+        }
+        .flower .petal {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50% 0;
+            opacity: 0.8;
+        }
+        .flower .center {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--flower-center-yellow);
+        }
+        /* Posisi kelopak bunga (contoh 5 kelopak) */
+        .flower .p1 { top: 0; left: 50%; transform: translateX(-50%) rotate(0deg); transform-origin: bottom center;}
+        .flower .p2 { top: 25%; left: 10%; transform: rotate(-65deg); transform-origin: bottom right;}
+        .flower .p3 { top: 25%; right: 10%; transform: rotate(65deg); transform-origin: bottom left;}
+        .flower .p4 { bottom: 10%; left: 20%; transform: rotate(-135deg); transform-origin: top right;}
+        .flower .p5 { bottom: 10%; right: 20%; transform: rotate(135deg); transform-origin: top left;}
+
+        .flower-1 { 
+            top: -110px; left: -50px; transform: rotate(-15deg); animation-delay: 1.2s; 
+            --initial-rotate: -30deg; --final-rotate: -15deg;
+        }
+        .flower-1 .petal { background-color: var(--flower-petal-pink); }
+        
+        .flower-2 { 
+            bottom: -60px; right: -40px; transform: rotate(20deg) scale(0.9); animation-delay: 1.5s;
+            --initial-rotate: 35deg; --final-rotate: 20deg;
+        }
+        .flower-2 .petal { background-color: var(--flower-petal-lavender); }
+
+        .crescent-moon {
+            font-size: 30px;
+            color: var(--moon-color);
+            text-shadow: 0 0 8px var(--moon-color);
+            top: -90px; right: -30px; transform: rotate(10deg); animation-delay: 1.3s;
+            --initial-rotate: 25deg; --final-rotate: 10deg;
+        }
+
+        .star {
+            font-family: 'Times New Roman', Times, serif; /* Untuk karakter bintang yang lebih solid */
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+            from { opacity: 0.6; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1.05); }
+        }
+        .star-1 { 
+            font-size: 22px; color: var(--star-gold);
+            top: -130px; left: 100px; transform: rotate(5deg); animation-delay: 1.6s; 
+            animation-duration: 1.8s;
+            --initial-rotate: 20deg; --final-rotate: 5deg;
+        }
+        .star-2 {
+            font-size: 18px; color: var(--star-silver);
+            top: -50px; left: -80px; transform: rotate(-25deg); animation-delay: 1.8s;
+            animation-duration: 2.2s;
+            --initial-rotate: -40deg; --final-rotate: -25deg;
+        }
+         .star-3 {
+            font-size: 20px; color: var(--star-gold);
+            bottom: -80px; left: 30px; transform: rotate(15deg) scale(0.9); animation-delay: 1.9s;
+            animation-duration: 2s;
+            --initial-rotate: 30deg; --final-rotate: 15deg;
+        }
+
+        .paper-airplane {
+            font-size: 28px;
+            color: var(--airplane-color);
+            filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.1));
+            top: -60px; right: 100px; transform: rotate(-20deg); animation-delay: 1.4s;
+            --initial-rotate: -35deg; --final-rotate: -20deg;
+        }
+        
+        .custom-tag {
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 400; /* Lebih ringan */
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            bottom: -50px;
+            left: -60px;
+            transform: rotate(-8deg);
+            animation-delay: 1.7s;
+            --initial-rotate: -20deg; --final-rotate: -8deg;
+        }
+        .custom-tag::before { /* Pita kecil */
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background-color: var(--heart-outline-color);
+            border-radius: 50%;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <div class="card-wrapper">
+            <div class="big-heart-outline"></div>
+            
+            <div class="envelope-container">
+                <div class="envelope" id="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="letter" id="letter">
+                        <p>Ca maaf ya, aku bener bener minta maaf. Aku ga bakal ngulangin hal kayak gitu lagi, aku janji.</p>
+                        <p>Maaf banget karena pernah ngerendahin perasaanku sendiri ke kamu, sampe bilang hal hal yang nyakitin, padahal seharusnya aku ga ngomong kaya gitu.</p>
+                        <p>Maaf kalau selama ini aku keliatan ga pernah ngerti kamu, ga pernah cukup buat kamu ngerasa dihargai. Aku terlalu egois, terlalu bego buat sadar aku lagi nyia-nyiain seseorang yang tulus kaya kamu.</p>
+                        <p>Aku mau bilang, perasaan aku ke kamu itu ga pernah bohong. Dari awal aku serius.</p>
+                        <p>Tolong jangan putusin aku ca. Aku janji aku ga akan ngulangin hal kaya gini lagi sayang.</p>
+                        <p>Maafin aku yaa ❤️</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dekorasi Baru -->
+            <div class="decoration flower flower-1">
+                <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div><div class="petal p4"></div><div class="petal p5"></div>
+                <div class="center"></div>
+            </div>
+            <div class="decoration flower flower-2">
+                <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div><div class="petal p4"></div><div class="petal p5"></div>
+                <div class="center"></div>
+            </div>
+            <div class="decoration crescent-moon">🌙</div>
+            <div class="decoration star star-1">✦</div>
+            <div class="decoration star star-2">✧</div>
+            <div class="decoration star star-3">★</div>
+            <div class="decoration paper-airplane">✉️</div> <!-- Emoji amplop terbang lebih cocok -->
+            <div class="decoration custom-tag">For Ca</div>
+
+        </div>
+
+        <div class="footer-text">Looking at you makes everything bad disappear</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const envelope = document.getElementById('envelope');
+            const letter = document.getElementById('letter');
+
+            setTimeout(() => {
+                envelope.classList.add('open');
+            }, 2200); // Sesuaikan delay ini agar pas dengan animasi dekorasi
+
+            // Optional: Buka saat klik
+            // envelope.addEventListener('click', () => {
+            //    envelope.classList.toggle('open');
+            //    if (envelope.classList.contains('open')) {
+            //        letter.scrollTop = 0; // Scroll ke atas saat dibuka
+            //    }
+            // });
+            
+            // Pastikan surat scroll ke atas saat muncul
+             if (letter) {
+                const observer = new MutationObserver(mutations => {
+                    mutations.forEach(mutation => {
+                        if (mutation.target.style.opacity === '1' || getComputedStyle(mutation.target).opacity === '1') {
+                            letter.scrollTop = 0;
+                            observer.disconnect(); // Hentikan observasi setelah selesai
+                        }
+                    });
+                });
+                observer.observe(letter, { attributes: true, attributeFilter: ['style','class'] });
+             }
+        });
+    </script>
+</body>
+</html>
